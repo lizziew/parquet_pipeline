@@ -1,0 +1,3 @@
+/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
+/home/ewei/../../big_fast_drive/ewei/tpch-dbgen/lineitem.csv
+/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet

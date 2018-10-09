@@ -52,11 +52,19 @@ if __name__ == "__main__":
     else:
       raise ValueError("column type undefined") 
 
-  schema = StructType(structfields) 
+  schema = StructType(structfields)
 
-sc.setCheckpointDir('/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints')
-rdd = sc.textFile("/home/ewei/../../big_fast_drive/ewei/tpch-dbgen/lineitem.csv", use_unicode=False)
-rdd.checkpoint()
-rdd2 = rdd.map(lambda line: parse(column_types, line))
-df = sqlContext.createDataFrame(rdd2, schema)
-df.write.parquet('/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet') 
+  ## Read in files
+  location_file_name = sys.argv[2] 
+  location_file = open(location_file_name, "r")
+  locations = location_file.read().splitlines() 
+
+  print("===============================================")
+  print(locations) 
+
+  sc.setCheckpointDir(locations[0])
+  rdd = sc.textFile(locations[1], use_unicode=False)
+  rdd.checkpoint()
+  rdd2 = rdd.map(lambda line: parse(column_types, line))
+  df = sqlContext.createDataFrame(rdd2, schema)
+  df.write.parquet(locations[2]) 
