@@ -59,9 +59,6 @@ if __name__ == "__main__":
   location_file = open(location_file_name, "r")
   locations = location_file.read().splitlines() 
 
-  print("===============================================")
-  print(locations) 
-
   sc.setCheckpointDir(locations[0])
   rdd = sc.textFile(locations[1], use_unicode=False)
   rdd.checkpoint()
