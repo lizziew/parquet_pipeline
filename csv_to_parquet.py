@@ -1,5 +1,6 @@
 #./spark/bin/spark-submit csv_to_parquet.py
 
+import sys 
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.sql.types import *
@@ -8,36 +9,54 @@ from datetime import datetime
 def parse_dt(s):
     return datetime.strptime(s, '%Y-%m-%d')
 
-def parse(line):
-    items = line.split("|")
-    return (int(items[0]), int(items[1]), int(items[2]), int(items[3]), float(items[4]), float(items[5]), float(items[6]), float(items[7]), items[8], items[9], parse_dt(items[10]), parse_dt(items[11]), parse_dt(items[12]), items[13], items[14], items[15])
+def parse(column_types, line):
+  result = []
+
+  items = line.split("|")
+  for i in range(len(items)):
+    if column_types[i] == "integer":
+      result.append(int(items[i]))
+    elif column_types[i] == "date":
+      result.append(parse_dt(items[i]))
+    elif column_types[i] == "string":
+      result.append(items[i])
+    elif column_types[i] == "double":
+      result.append(float(items[i]))
+  
+  return tuple(result) 
 
 if __name__ == "__main__":
   sc = SparkContext(appName="CSV2Parquet")
   sqlContext = SQLContext(sc)
 
-  schema = StructType([
-    StructField("l_orderkey", IntegerType(), True),
-    StructField("l_partkey", IntegerType(), True),
-    StructField("l_suppkey", IntegerType(), True),
-    StructField("l_linenumber", IntegerType(), True),
-    StructField("l_quantity", DoubleType(), True),
-    StructField("l_extendedprice", DoubleType(), True),
-    StructField("l_discount", DoubleType(), True),
-    StructField("l_tax", DoubleType(), True),
-    StructField("l_returnflag", StringType(), True),
-    StructField("l_linestatus", StringType(), True),
-    StructField("l_shipdate", DateType(), True),
-    StructField("l_commitdate", DateType(), True),
-    StructField("l_receiptdate", DateType(), True),
-    StructField("l_shipinstruct", StringType(), True),
-    StructField("l_shipmode", StringType(), True),
-    StructField("l_comment", StringType(), True)
- ])
+  # Read in schema 
+  schema_file_name = sys.argv[1]
+  schema_file = open(schema_file_name, "r") 
+  schema_attributes = schema_file.read().splitlines() 
+  column_names = []
+  column_types = []
+  for attribute in schema_attributes: 
+      column_names.append(attribute.split(",")[0])
+      column_types.append(attribute.split(",")[1].lower().replace(" ", ""))
+
+  structfields = []
+  for i in range(len(column_names)):
+    if column_types[i] == "integer":
+      structfields.append(StructField(column_names[i], IntegerType(), True))
+    elif column_types[i] == "double":
+      structfields.append(StructField(column_names[i], DoubleType(), True))
+    elif column_types[i] == "string":
+     structfields.append(StructField(column_names[i], StringType(), True))
+    elif column_types[i] == "date": 
+      structfields.append(StructField(column_names[i], DateType(), True))
+    else:
+      raise ValueError("column type undefined") 
+
+  schema = StructType(structfields) 
 
 sc.setCheckpointDir('/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints')
 rdd = sc.textFile("/home/ewei/../../big_fast_drive/ewei/tpch-dbgen/lineitem.csv", use_unicode=False)
 rdd.checkpoint()
-rdd2 = rdd.map(parse)
+rdd2 = rdd.map(lambda line: parse(column_types, line))
 df = sqlContext.createDataFrame(rdd2, schema)
-df.write.parquet('/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet')
+df.write.parquet('/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet') 
