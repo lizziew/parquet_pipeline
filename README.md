@@ -36,6 +36,17 @@ l_shipmode, String
 l_comment, String
 ```
 
-The column_type should be Integer, Double, String, or Date, and it's case insensitive. 
+The column_type should be Integer, Double, String, or Date, and it's case insensitive.
 
-**Run csv_to_parquet.py.** Run ```csv_to_parquet.py``` using the command ```./spark/bin/spark-submit parquet_pipeline/csv_to_parquet.py parquet_pipeline/lineitem_schema.txt```. (In other words, ```[spark command] [csv_to_parquet.py] [schema.txt]```)
+**Create a text file which lists out the files/directories you want to read and write from.** Specifically, include on 3 separate lines:
+- Checkpoints directory
+- Csv file
+- Directory to write Parquet files to
+
+For example, 
+
+```
+
+```
+
+**Run csv_to_parquet.py.** Run ```csv_to_parquet.py``` using the command ```./spark/bin/spark-submit parquet_pipeline/csv_to_parquet.py parquet_pipeline/lineitem_schema.txt locations.txt```. (In other words, ```[spark command] [csv_to_parquet.py] [schema.txt] [file_locations.txt]```, where schema.txt and file_locations.txt are the two text files you created in the previous two steps.)
