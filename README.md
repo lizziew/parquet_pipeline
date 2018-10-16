@@ -62,3 +62,7 @@ SELECT l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedpri
 ```
 
 **Run the query on the Parquet files.** Run ```query_parquet.py``` using the command ```./spark-2.3.2-bin-hadoop2.7/bin/spark-submit parquet_pipeline/query_parquet.py parquet_pipeline/query.txt parquet_pipeline/locations.txt```. (In other words, ```[spark command] [query_parquet.py] [query.txt] [file_locations.txt]```.) 
+
+### WIP: Loading & Querying on Arrow
+
+```./spark-2.3.2-bin-hadoop2.7/bin/spark-submit parquet_pipeline/sql_arrow.py tpch-dbgen/lineitem.csv```
