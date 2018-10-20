@@ -30,7 +30,7 @@ if __name__ == "__main__":
   sqlContext = SQLContext(sc)
 
   # Read in schema 
-  schema_file_name = sys.argv[1]
+  schema_file_name = sys.argv[2]
   schema_file = open(schema_file_name, "r") 
   schema_attributes = schema_file.read().splitlines() 
   column_names = []
@@ -55,13 +55,13 @@ if __name__ == "__main__":
   schema = StructType(structfields)
 
   ## Read in files
-  location_file_name = sys.argv[2] 
+  location_file_name = sys.argv[3] 
   location_file = open(location_file_name, "r")
   locations = location_file.read().splitlines() 
 
-  sc.setCheckpointDir(locations[0])
-  rdd = sc.textFile(locations[1], use_unicode=False)
+  sc.setCheckpointDir(locations[2])
+  rdd = sc.textFile(sys.argv[1], use_unicode=False)
   rdd.checkpoint()
   rdd2 = rdd.map(lambda line: parse(column_types, line))
   df = sqlContext.createDataFrame(rdd2, schema)
-  df.write.parquet(locations[2]) 
+  df.write.parquet(locations[3]) 

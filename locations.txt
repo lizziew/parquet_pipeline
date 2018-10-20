@@ -1,3 +1,4 @@
+/home/ewei/../../big_fast_drive/ewei/tpch-dbgen
+/home/ewei/../../big_fast_drive/ewei/spark-2.3.2-bin-hadoop2.7/bin/spark-submit
 /home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
-/home/ewei/../../big_fast_drive/ewei/tpch-dbgen/lineitem.csv
 /home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet

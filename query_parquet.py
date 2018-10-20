@@ -23,6 +23,6 @@ if __name__ == "__main__":
     # Run query 
     start = time.time()
     df = sqlContext.sql(query)
-    df.show(n = 5)
     end = time.time()
     print(end - start)
+    print("=================")
