@@ -5,6 +5,7 @@ from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.sql.types import *
 from datetime import datetime
+import time
 
 def parse_dt(s):
     return datetime.strptime(s, '%Y-%m-%d')
@@ -64,4 +65,10 @@ if __name__ == "__main__":
   rdd.checkpoint()
   rdd2 = rdd.map(lambda line: parse(column_types, line))
   df = sqlContext.createDataFrame(rdd2, schema)
+  start = time.time()
   df.write.parquet(locations[3]) 
+  end = time.time()
+
+  f = open('./temp.txt', 'w')
+  f.write(str(end-start) + " seconds") 
+  f.close()
