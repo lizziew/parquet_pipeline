@@ -6,7 +6,7 @@ The commands are:
 ```
 help -- prints help menu
 gen SF -- generates tpch data with a scale factor of SF
-ctop CSV SCHEMA -- converts CSV with SCHEMA to parquet and prints out the file sizes before and after compression
+ctop CSV SCHEMA -- converts CSV with SCHEMA to parquet. Prints out the file sizes before and after compression, and compression time.
 clean -- removes the checkpoints directory and parquet files
 ```
 
@@ -59,7 +59,7 @@ l_comment, String
 
 The column_type should be Integer, Double, String, or Date, and it's case insensitive.
 
-Then, run ```./pipeline.sh ctop CSV SCHEMA```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command will also print out the file size before compression, and the total size of the Parquet files after compression. 
+Then, run ```./pipeline.sh ctop CSV SCHEMA```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command will also print out the file size before compression, and the total size of the Parquet files after compression. It also prints out the time compression takes in seconds.
 
 ## Clean up
 To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
