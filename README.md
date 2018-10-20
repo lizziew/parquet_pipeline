@@ -1,22 +1,43 @@
 # parquet_pipeline
 
-## How to use
+If you're stuck at any time, run ```./pipeline.sh help``` to get the help menu. You can also refer to this README. 
 
-### Install Spark
+The commands are:
+```
+help -- prints help menu
+gen SF -- generates tpch data with a scale factor of SF
+ctop CSV SCHEMA -- converts CSV with SCHEMA to parquet and prints out the file sizes before and after compression
+clean -- removes the checkpoints directory and parquet files
+```
 
-For example, on Ubuntu, download the latest release from http://spark.apache.org/downloads.html and unpack with ```tar -xvf```
+## Set up
 
-###  Generate data 
+**Install Spark**. For example, on Ubuntu, download the latest release from http://spark.apache.org/downloads.html and unpack with ```tar -xvf```
 
-**Generate a CSV file.** For example, to generate data for the TPC-H benchmark, you can: 
-- Clone the repo ```git clone https://github.com/electrum/tpch-dbgen```
-- Run ```cd tpch-dbgen/ && make``` 
-- Generate the data with a scale factor of 10 by running ```./dbgen -s 10``` 
-- In the \*.tbl files, delete the last character (the 'l' delimiter) from each line by running ```sed 's/.$//' lineitem.tbl > lineitem.csv```
+**Clone the tpch-dbgen repo.** You can use the command ```git clone https://github.com/electrum/tpch-dbgen```. 
 
-### Convert CSV to Parquet
+**Create a location.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
+- tpch-dbgen directory
+- Spark directory 
+- Checkpoints directory
+- Directory to write Parquet files to
 
-**Create a text file which describes the schema of the CSV file.** Each line should describe 1 attribute, and be structured like 'column_name, column_type'. For example, for the lineitem table (TPC-H), we have:
+For example, 
+
+```
+/home/ewei/../../big_fast_drive/ewei/tpch-dbgen
+/home/ewei/../../big_fast_drive/ewei/spark-2.3.2-bin-hadoop2.7/bin/spark-submit
+/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
+/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet
+```
+
+##  Generate data 
+
+To generate data for the TPC-H benchmark, run ```./pipeline.sh gen SF```, where SF is the scale factor. For example, to generate with a scale factor of 10, run ```./pipeline.sh gen 10```. 
+
+## Convert CSV to Parquet
+
+Create a text file which describes the schema of the CSV file. Each line should describe 1 attribute, and be structured like 'column_name, column_type'. For example, for the lineitem table (TPC-H), we have:
 
 ```
 l_orderkey, Integer
@@ -38,31 +59,20 @@ l_comment, String
 
 The column_type should be Integer, Double, String, or Date, and it's case insensitive.
 
-**Create a text file which lists out the files/directories you want to read and write from.** Specifically, include on 3 separate lines:
-- Checkpoints directory
-- Csv file
-- Directory to write Parquet files to
+Then, run ```./pipeline.sh ctop CSV SCHEMA```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command will also print out the file size before compression, and the total size of the Parquet files after compression. 
 
-For example, 
+## Clean up
+To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
 
-```
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
-/home/ewei/../../big_fast_drive/ewei/tpch-dbgen/lineitem.csv
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet
-```
-
-**Run csv_to_parquet.py.** Run ```csv_to_parquet.py``` using the command ```./spark/bin/spark-submit parquet_pipeline/csv_to_parquet.py parquet_pipeline/lineitem_schema.txt locations.txt```. (In other words, ```[spark command] [csv_to_parquet.py] [schema.txt] [file_locations.txt]```, where schema.txt and file_locations.txt are the two text files you created in the previous two steps.)
-
-### Query Parquet 
+## Query Parquet 
 
 **Create a text file for the query.** For example, a TPC-H query on lineitem would be
-
 ```
 SELECT l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice * (1 - l_discount)) as sum_disc_price, sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order FROM lineitem WHERE l_shipdate <= date '1998-12-01' - interval '90' day GROUP BY l_returnflag, l_linestatus ORDER BY l_returnflag, l_linestatus
 ```
 
 **Run the query on the Parquet files.** Run ```query_parquet.py``` using the command ```./spark-2.3.2-bin-hadoop2.7/bin/spark-submit parquet_pipeline/query_parquet.py parquet_pipeline/query.txt parquet_pipeline/locations.txt```. (In other words, ```[spark command] [query_parquet.py] [query.txt] [file_locations.txt]```.) 
 
-### WIP: Loading & Querying on Arrow
+## WIP: Loading & Querying on Arrow
 
 ```./spark-2.3.2-bin-hadoop2.7/bin/spark-submit parquet_pipeline/sql_arrow.py tpch-dbgen/lineitem.csv```
