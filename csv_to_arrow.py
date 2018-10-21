@@ -3,6 +3,7 @@
 import sys 
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
+from pyspark import SparkConf
 from pyspark.sql.types import *
 from datetime import datetime
 import time
@@ -27,9 +28,10 @@ def parse(column_types, line):
   return tuple(result) 
 
 if __name__ == "__main__":
-  sc = SparkContext(appName="CSV2Parquet")
+  conf = SparkConf().set("spark.driver.maxResultSize", "10g")
+  sc = SparkContext(appName="CSV2Arrow", conf=conf)
   sqlContext = SQLContext(sc)
-  sqlContext.setConf("spark.sql.parquet.compression.codec", sys.argv[4]) 
+  sqlContext.setConf("spark.sql.execution.arrow.enabled", "true")
 
   # Read in schema 
   schema_file_name = sys.argv[2]
@@ -67,9 +69,9 @@ if __name__ == "__main__":
   rdd2 = rdd.map(lambda line: parse(column_types, line))
   df = sqlContext.createDataFrame(rdd2, schema)
 
-  # Convert to Parquet 
+  # Convert to Arrow
   start = time.time()
-  df.write.parquet(locations[3]) 
+  pdf = df.toPandas()
   end = time.time()
 
   # Record time 
