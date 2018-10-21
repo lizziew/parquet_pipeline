@@ -6,7 +6,7 @@ The commands are:
 ```
 help -- prints help menu
 gen SF -- generates tpch data with a scale factor of SF
-ctop CSV SCHEMA -- converts CSV with SCHEMA to parquet. Prints out the file sizes before and after compression, and compression time.
+ctop CSV SCHEMA COMPRESSION -- converts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy). Prints file sizes before and after compression, and compression time.
 clean -- removes the checkpoints directory and parquet files
 ```
 
@@ -16,7 +16,7 @@ clean -- removes the checkpoints directory and parquet files
 
 **Clone the tpch-dbgen repo.** You can use the command ```git clone https://github.com/electrum/tpch-dbgen```. 
 
-**Create a location.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
+**Create a locations.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
 - tpch-dbgen directory
 - Spark directory 
 - Checkpoints directory
@@ -59,7 +59,7 @@ l_comment, String
 
 The column_type should be Integer, Double, String, or Date, and it's case insensitive.
 
-Then, run ```./pipeline.sh ctop CSV SCHEMA```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command will also print out the file size before compression, and the total size of the Parquet files after compression. It also prints out the time compression takes in seconds.
+Then, run ```./pipeline.sh ctop CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt gzip```. This command will also print out the file size before compression with gzip, and the total size of the Parquet files after compression. It also prints out the time compression takes in seconds.
 
 ## Clean up
 To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
