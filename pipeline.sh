@@ -7,7 +7,7 @@ if [ $1 = "help" ]; then
 elif [ $1 = "gen" ]; then
   (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv)
 elif [ $1 = "ctop" ]; then
-  ${lines[1]} csv_to_parquet.py $2 $3 locations.txt
+  ${lines[1]} --master local[16] csv_to_parquet.py $2 $3 locations.txt
   printf "COMPRESSION TIME\n"
   cat temp.txt; rm temp.txt 
   printf "\nBEFORE COMPRESSION\n" 
