@@ -16,7 +16,7 @@ clean -- removes the checkpoints directory and parquet files
 
 **Clone the tpch-dbgen repo.** You can use the command ```git clone https://github.com/electrum/tpch-dbgen```. 
 
-**Create a location.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
+**Create a locations.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
 - tpch-dbgen directory
 - Spark directory 
 - Checkpoints directory
