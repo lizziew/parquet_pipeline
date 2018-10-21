@@ -29,7 +29,7 @@ def parse(column_types, line):
 if __name__ == "__main__":
   sc = SparkContext(appName="CSV2Parquet")
   sqlContext = SQLContext(sc)
-  sqlContext.setConf("spark.sql.parquet.compression.codec", "gzip") 
+  sqlContext.setConf("spark.sql.parquet.compression.codec", sys.argv[4]) 
 
   # Read in schema 
   schema_file_name = sys.argv[2]
