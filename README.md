@@ -8,16 +8,18 @@ Usage: ./pipeline.sh [COMMAND] [ARGS]
 Commands:
 help
         prints help menu
-gen SF
+gent SF
         generates tpch data with a scale factor of SF
+geng SCHEMA SIZE
+        generates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)
 ctop CSV SCHEMA COMPRESSION
         converts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)
         prints file sizes before and after compression, and compression time
-ctoa CSV SCHEMA
+ctoa CSV SCHEMA COMPRESSION
         converts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)
         prints compression time
 clean
-        removes the checkpoints directory and parquet file
+        removes the checkpoints directory and parquet files
 ```
 
 You can also refer to this README for examples. 
@@ -47,7 +49,9 @@ For example,
 
 ##  Generate data 
 
-To generate data for the TPC-H benchmark, run ```./pipeline.sh gen SF```, where SF is the scale factor. For example, to generate with a scale factor of 10, run ```./pipeline.sh gen 10```. 
+To generate data for the TPC-H benchmark, run ```./pipeline.sh gent SF```, where SF is the scale factor. For example, to generate with a scale factor of 10, run ```./pipeline.sh gent 10```. 
+
+To generate data with your own specified schema, run ```./pipeline.sh geng SCHEMA SIZE```, where SCHEMA is a text file containing your schema (see next section for how to create this file), and SIZE is the desired size in GB.  
 
 ## Convert CSV to Parquet
 
