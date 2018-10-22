@@ -73,13 +73,13 @@ l_comment, String
 
 The column_type should be Integer, Double, String, or Date, and it's case insensitive.
 
-Then, run ```./pipeline.sh ctop CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt gzip```. This command will also print out the file size before compression with gzip, and the total size of the Parquet files after compression. It also prints out the time compression takes in seconds.
+Then, run ```./pipeline.sh ctop CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Parquet, and SCHEMA is the text file from above. COMPRESSION can be one of ```none```, ```gzip```,or ```snappy```. For example, we can run ```./pipeline.sh ctop ../tpch-dbgen/lineitem.csv lineitem_schema.txt gzip```. This command will also print out the file size before compression with gzip, and the total size of the Parquet files after compression. It also prints out the time compression takes in seconds.
 
 ## Convert CSV to Arrow (Spark DataFrame to Pandas) 
 
 Create a text file which describes the schema of the CSV file. See the previous section, ***Convert CSV to Parquet***, for details. 
 
-Then, run ```./pipline.sh ctoa CSV SCHEMA```, where CSV is the CSV file to convert to Arrow, and SCHEMA is the text file fro above. For example, we can run ``` ./pipeline.sh ctoa ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command prints out the time compression takes in seconds. 
+Then, run ```./pipline.sh ctoa CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Arrow, and SCHEMA is the text file from above. COMPRESSION can be one of ```lz4```, ```brotli```, ```gzip```, ```snappy```, or ```zstd```. For example, we can run ``` ./pipeline.sh ctoa ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command prints out the time compression takes in seconds. 
 
 ## Clean up
 To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
