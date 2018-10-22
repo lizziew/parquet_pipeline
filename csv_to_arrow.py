@@ -1,11 +1,10 @@
-#./spark/bin/spark-submit csv_to_parquet.py
-
 import sys 
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark import SparkConf
 from pyspark.sql.types import *
 from datetime import datetime
+import pyarrow as pa
 import time
 
 def parse_dt(s):
@@ -69,12 +68,27 @@ if __name__ == "__main__":
   rdd2 = rdd.map(lambda line: parse(column_types, line))
   df = sqlContext.createDataFrame(rdd2, schema)
 
-  # Convert to Arrow
+  # Convert from Spark DataFrame to Pandas
   start = time.time()
   pdf = df.toPandas()
   end = time.time()
+
+  # Convert from Pandas to Arrow
+  table = pa.Table.from_pandas(pdf, preserve_index=False)
+  batches = table.to_batches() 
+  buffers = []
+  for batch in batches:
+      buffers.append(pa.compress(batch.serialize(), codec=sys.argv[4]))
+  buffers_size = 0.0
+  for buffer in buffers:
+      buffers_size += buffer.size
 
   # Record time 
   f = open('./temp.txt', 'w')
   f.write(str(end-start) + " seconds") 
   f.close()
+
+  # Record size
+  f2 = open('./tempa.txt', 'w')
+  f2.write(str(buffers_size) + " bytes")  
+  f2.close() 
