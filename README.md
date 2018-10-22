@@ -79,7 +79,7 @@ Then, run ```./pipeline.sh ctop CSV SCHEMA COMPRESSION```, where CSV is the CSV 
 
 Create a text file which describes the schema of the CSV file. See the previous section, ***Convert CSV to Parquet***, for details. 
 
-Then, run ```./pipline.sh ctoa CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Arrow, and SCHEMA is the text file from above. COMPRESSION can be one of ```lz4```, ```brotli```, ```gzip```, ```snappy```, or ```zstd```. For example, we can run ``` ./pipeline.sh ctoa ../tpch-dbgen/lineitem.csv lineitem_schema.txt```. This command prints out the time compression takes in seconds. 
+Then, run ```./pipline.sh ctoa CSV SCHEMA COMPRESSION```, where CSV is the CSV file to convert to Arrow, and SCHEMA is the text file from above. COMPRESSION can be one of ```lz4```, ```brotli```, ```gzip```, ```snappy```, or ```zstd```. For example, we can run ``` ./pipeline.sh ctoa ../tpch-dbgen/lineitem.csv lineitem_schema.txt snappy```. This command prints out the time compression takes in seconds. 
 
 ## Clean up
 To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
