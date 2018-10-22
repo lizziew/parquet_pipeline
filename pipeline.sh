@@ -3,9 +3,11 @@
 lines=(`cat "locations.txt"`)  
 
 if [ $1 = "help" ]; then
-  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngen SF\n\tgenerates tpch data with a scale factor of SF\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
-elif [ $1 = "gen" ]; then
+  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA NUMROWS\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and NUMROWS rows\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
+elif [ $1 = "gent" ]; then
   (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv)
+elif [ $1 = "geng" ]; then
+  python gen_data.py $2 $3 
 elif [ $1 = "ctop" ]; then
   ${lines[1]} --master local[16] csv_to_parquet.py $2 $3 locations.txt $4
   printf "COMPRESSION TIME\n"
