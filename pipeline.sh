@@ -3,7 +3,7 @@
 lines=(`cat "locations.txt"`)  
 
 if [ $1 = "help" ]; then
-  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA NUMROWS\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and NUMROWS rows\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
+  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
 elif [ $1 = "gent" ]; then
   (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv)
 elif [ $1 = "geng" ]; then
