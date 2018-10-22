@@ -14,7 +14,7 @@ ctop CSV SCHEMA COMPRESSION
         converts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)
         prints file sizes before and after compression, and compression time
 ctoa CSV SCHEMA
-        converts CSV with SCHEMA to arrow
+        converts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)
         prints compression time
 clean
         removes the checkpoints directory and parquet file
