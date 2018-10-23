@@ -3,7 +3,7 @@
 lines=(`cat "locations.txt"`)  
 
 if [ $1 = "help" ]; then
-  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
+  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctopbench CSV SCHEMA COMPRESSION NUMTIMES\n\tSame as ctop, but writes to parquet NUMTIMES times, and doesn't print out any values\n\tMeant for perf record/report\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nclean\n\tremoves the checkpoints directory and parquet files\n"
 elif [ $1 = "gent" ]; then
   (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv)
 elif [ $1 = "geng" ]; then
@@ -17,6 +17,8 @@ elif [ $1 = "ctop" ]; then
   printf "\nAFTER COMPRESSION\n"
   (cd ${lines[3]}; du -sh)
   printf "\n"
+elif [ $1 = "ctopbench" ]; then 
+  ${lines[1]} --master local[16] --driver-memory 10g csv_to_parquet_perf.py $2 $3 locations.txt $4 $5
 elif [ $1 = "ctoa" ]; then
   ${lines[1]} --master local[16] --driver-memory 10g csv_to_arrow.py $2 $3 locations.txt $4
   printf "COMPRESSION TIME\n"
