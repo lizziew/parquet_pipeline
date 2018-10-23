@@ -32,8 +32,8 @@ You can also refer to this README for examples.
 
 **Clone the tpch-dbgen repo.** You can use the command ```git clone https://github.com/electrum/tpch-dbgen```. 
 
-**Create a locations.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 3 separate lines:
-- tpch-dbgen directory
+**Create a locations.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 4 separate lines:
+- Directory the CSV file is in (e.g. tpch-dbgen directory) 
 - Spark directory 
 - Checkpoints directory
 - Directory to write Parquet files to
