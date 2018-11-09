@@ -5,7 +5,7 @@ lines=(`cat "locations.txt"`)
 if [ $1 = "help" ]; then
   printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nqueryp NUM_ITERATIONS\n\truns query in query.txt on Parquet files for NUM_ITERATIONS iterations (after warming up)\n\tshould be run after the ctop command\n\tprints time to execute query\nclean\n\tremoves the checkpoints directory and parquet files\n"
 elif [ $1 = "gent" ]; then
-  (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv)
+  (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv; sed 's/.$//' customer.tbl > customer.csv; sed 's/.$//' orders.tbl > orders.csv; sed 's/.$//' supplier.tbl > supplier.csv; sed 's/.$//' nation.tbl > nation.csv; sed 's/.$//' region.tbl > region.csv; sed 's/.$//' part.tbl > part.csv;)
 elif [ $1 = "geng" ]; then
   python gen_data.py $2 $3 
 elif [ $1 = "ctop" ]; then
