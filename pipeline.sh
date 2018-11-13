@@ -3,7 +3,7 @@
 lines=(`cat "locations.txt"`)  
 
 if [ $1 = "help" ]; then
-  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nqueryp NUM_ITERATIONS\n\truns query in query.txt on Parquet files for NUM_ITERATIONS iterations (after warming up)\n\tshould be run after the ctop command\n\tprints time to execute query\nclean\n\tremoves the checkpoints directory and parquet files\n"
+  printf "CompressionPipeline\nUsage: ./pipeline.sh [COMMAND] [ARGS]\nCommands:\nhelp\n\tprints help menu\ngent SF\n\tgenerates tpch data with a scale factor of SF\ngeng SCHEMA SIZE\n\tgenerates a CSV file (gendata.csv) with random values following SCHEMA and size SIZE (in GB)\nctop CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to parquet with COMPRESSION (none, gzip,or snappy)\n\tprints file sizes before and after compression, and compression time\nctoa CSV SCHEMA COMPRESSION\n\tconverts CSV with SCHEMA to arrow with COMPRESSION (lz4, brotli, gzip, snappy, or zstd)\n\tprints compression time\nqueryp NUM_ITERATIONS\n\truns query in query.txt on Parquet files for NUM_ITERATIONS iterations (after warming up)\n\tshould be run after the ctop command\n\tprints time to execute query\nclean\n\tremoves the checkpoints directory and parquet files\npeek ARGS\n\tcalls parquet-tools with ARGS\n"
 elif [ $1 = "gent" ]; then
   (cd ${lines[0]}; make; ./dbgen -s $2; sed 's/.$//' lineitem.tbl > lineitem.csv; sed 's/.$//' customer.tbl > customer.csv; sed 's/.$//' orders.tbl > orders.csv; sed 's/.$//' supplier.tbl > supplier.csv; sed 's/.$//' nation.tbl > nation.csv; sed 's/.$//' region.tbl > region.csv; sed 's/.$//' part.tbl > part.csv;)
 elif [ $1 = "geng" ]; then
@@ -26,6 +26,8 @@ elif [ $1 = "ctoa" ]; then
   printf "\nAFTER COMPRESSION\n"
   cat tempa.txt; rm tempa.txt 
   printf "\n"
+elif [ $1 = "peek" ]; then
+  java -jar ${lines[4]} "${@:2}"
 elif [ $1 == "queryp" ]; then
   ${lines[1]} --master local[16] query_parquet.py query.txt locations.txt $2
   cat temp.txt; rm temp.txt

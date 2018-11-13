@@ -1,4 +1,5 @@
-/home/ewei/../../big_fast_drive/ewei/tpch-dbgen
-/home/ewei/../../big_fast_drive/ewei/spark-2.3.2-bin-hadoop2.7/bin/spark-submit
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet
+/mnt/minwei/tpch-dbgen
+/mnt/minwei/spark-2.4.0-bin-hadoop2.7/bin/spark-submit
+/mnt/minwei/parquet_pipeline/checkpoints
+/mnt/minwei/lineitem-parquet
+/mnt/minwei/parquet-mr-apache-parquet-1.8.3/parquet-tools/target/parquet-tools-1.8.3.jar
