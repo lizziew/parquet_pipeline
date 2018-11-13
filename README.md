@@ -106,3 +106,6 @@ SELECT l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedpri
 
 ## Clean up
 To remove the checkpoints directory and generated Parquet files, run ```./pipeline.sh clean```. 
+
+## Use parquet-tools
+Examples of commands are ```./pipeline.sh peek schema ../lineitem-parquet/part-00000-f031d4dd-09d8-40fe-b62c-207e792de2ab-c000.parquet``` or ```./pipeline.sh peek --help```
