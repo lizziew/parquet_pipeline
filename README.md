@@ -26,6 +26,10 @@ clean
         removes the checkpoints directory and parquet files
 peek ARGS
         calls parquet-tools with ARGS
+        ARGS='schema PARQUET_FILE': get schema
+        ARGS='cat PARQUET_FILE': get data
+        ARGS='meta PARQUET_FILE': get metadata
+        ARGS='--help': show parquet-tools help menu
 ```
 
 You can also refer to this README for examples. 
