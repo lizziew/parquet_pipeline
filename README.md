@@ -24,6 +24,8 @@ queryp NUM_ITERATIONS
         prints time to execute query
 clean
         removes the checkpoints directory and parquet files
+peek ARGS
+        calls parquet-tools with ARGS
 ```
 
 You can also refer to this README for examples. 
@@ -34,6 +36,8 @@ You can also refer to this README for examples.
 
 **Install pyarrow**. Run ```pip install pyarrow```. 
 
+**Install parquet-tools**. Download the latest release from https://github.com/apache/parquet-mr/releases and unpack with ```tar xvzf```. Then ```cd parquet-tools``` and build with ```mvn clean package -Plocal```. 
+
 **Clone the tpch-dbgen repo.** You can use the command ```git clone https://github.com/electrum/tpch-dbgen```. 
 
 **Create a locations.txt file in the parquet_pipeline directory.**  This will list out the files/directories you want to read and write from. Specifically, include on 4 separate lines:
@@ -41,14 +45,16 @@ You can also refer to this README for examples.
 - Spark directory 
 - Checkpoints directory
 - Directory to write Parquet files to
+- Location of parquet-tools jar 
 
 For example, 
 
 ```
-/home/ewei/../../big_fast_drive/ewei/tpch-dbgen
-/home/ewei/../../big_fast_drive/ewei/spark-2.3.2-bin-hadoop2.7/bin/spark-submit
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/checkpoints
-/home/ewei/../../big_fast_drive/ewei/parquet_pipeline/lineitem-parquet
+/home/tpch-dbgen
+/home/spark-2.4.0-bin-hadoop2.7/bin/spark-submit
+/home/parquet_pipeline/checkpoints
+/home/lineitem-parquet
+/home/parquet-mr-apache-parquet-1.8.3/parquet-tools/target/parquet-tools-1.8.3.jar
 ```
 
 ##  Generate data 
