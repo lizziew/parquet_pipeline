@@ -30,6 +30,7 @@ peek ARGS
         ARGS='cat PARQUET_FILE': get data
         ARGS='meta PARQUET_FILE': get metadata
         ARGS='--help': show parquet-tools help menu
+        ARGS='dump PARQUET_FILE': more verbose version of meta
 ```
 
 You can also refer to this README for examples. 
