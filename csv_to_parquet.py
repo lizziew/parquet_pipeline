@@ -34,8 +34,9 @@ if __name__ == "__main__":
   name = sys.argv[6]  
 	
   print("...WRITING TO PARQUET FOR " + name + " WITH COMPRESSION " + compression_scheme + " AND DICT ENCODING " + dict_encoding)
-
-  sc = SparkContext(appName="CSV2Parquet")
+  
+  app_name = "CSV2Parquet_" + name + "_" + compression_scheme + "_" + dict_encoding 
+  sc = SparkContext(appName=app_name)
   sqlContext = SQLContext(sc)
   sqlContext.setConf("spark.sql.parquet.compression.codec", compression_scheme)
   sqlContext.setConf("parquet.enable.dictionary", dict_encoding) 
