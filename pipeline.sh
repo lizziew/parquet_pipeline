@@ -22,7 +22,7 @@ elif [ $1 = "ctoa" ]; then
 elif [ $1 = "peek" ]; then
   java -jar ${lines[4]} "${@:2}"
 elif [ $1 == "queryp" ]; then
-  ${lines[1]} --master local[16] --driver-memory 30g --conf spark.eventLog.enabled=true query_parquet.py $2 locations.txt $3
+  ${lines[1]} --master local[16] --driver-memory 30g query_parquet.py $2 locations.txt $3
 elif [ $1 == "clean" ]; then
   rm -rf ${lines[2]}; rm -rf ${lines[3]}
 else
